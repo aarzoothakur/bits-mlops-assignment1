@@ -1,1 +1,5 @@
 pytest
+pandas
+scikit-learn
+numpy
+joblib
