@@ -11,7 +11,8 @@ X = pd.DataFrame(data.data, columns=data.feature_names)
 y = pd.DataFrame(data.target, columns=['target'])
 
 # Split data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X,
+    y, test_size=0.2, random_state=42)
 
 # Train the model
 model = LogisticRegression(max_iter=200)
