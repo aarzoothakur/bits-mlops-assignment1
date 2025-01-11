@@ -42,6 +42,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install --force-reinstall numpy  # Reinstall numpy
       - name: Check if pytest is installed
         run: |
           python -m pytest --version  # This step ensures pytest is installed correctly
@@ -68,6 +69,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install --force-reinstall numpy  # Reinstall numpy
       - name: Train and Save Model
         run: |
           python simple_model.py  # This runs the simple_model.py file to train the model
