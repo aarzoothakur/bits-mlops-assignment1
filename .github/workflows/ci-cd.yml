@@ -35,6 +35,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
+      - name: Clear pip cache
+        run: |
+          pip cache purge  # Clear pip cache to avoid any caching issues
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -58,6 +61,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
+      - name: Clear pip cache
+        run: |
+          pip cache purge  # Clear pip cache to avoid any caching issues
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -70,6 +76,5 @@ jobs:
           echo "Deploying model to production..."
           # Deploy the trained model here
           # Example: Upload the model to a cloud provider or server
-          # You can use APIs like AWS S3, Google Cloud Storage, or Azure Blob Storage to upload your model file
           # Example deployment for AWS S3 (ensure you have AWS credentials set up)
           # aws s3 cp model.pkl s3://your-bucket-name/model.pkl
