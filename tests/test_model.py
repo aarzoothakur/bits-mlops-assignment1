@@ -13,4 +13,5 @@ def test_model_prediction():
     prediction = model.predict(test_sample)
 
     # Assert that the prediction is one of the valid classes (0, 1, or 2)
-    assert prediction[0] in [0, 1, 2], f"Unexpected prediction: {prediction[0]}"
+    assert prediction[0] in [0, 1, 2], \
+        f"Unexpected prediction: {prediction[0]}"
