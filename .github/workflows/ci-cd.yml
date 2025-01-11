@@ -47,7 +47,7 @@ jobs:
           ls -R  # List all files in the repository to check the test paths
       - name: Run tests
         run: |
-          pytest ./tests -v  # Verbose output to ensure tests are being discovered
+          pytest /tests -v  # Verbose output to ensure tests are being discovered
 
   deploy:
     runs-on: ubuntu-latest
