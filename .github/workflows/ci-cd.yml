@@ -26,7 +26,7 @@ jobs:
           pip install flake8
           flake8 .
 
-    test:
+  test:
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -42,6 +42,9 @@ jobs:
       - name: Check if pytest is installed
         run: |
           python -m pytest --version  # This step ensures pytest is installed correctly
+      - name: List files for debugging
+        run: |
+          ls -R  # List all files in the repository to check the test paths
       - name: Run tests
         run: |
           pytest -v  # Verbose output to ensure tests are being discovered
@@ -63,3 +66,4 @@ jobs:
         run: |
           echo "Deploying model to production..."
           # Add your deployment scripts here (e.g., deploying to a server or cloud)
+
