@@ -44,7 +44,8 @@ jobs:
           python -m pytest --version  # This step ensures pytest is installed correctly
       - name: Run tests
         run: |
-          pytest
+          pytest -v  # Verbose output to ensure the tests are being discovered
+          pytest ./tests/test_model.py  # Specify the path to your test file explicitly
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,4 +64,3 @@ jobs:
         run: |
           echo "Deploying model to production..."
           # Add your deployment scripts here (e.g., deploying to a server or cloud)
-
