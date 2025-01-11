@@ -2,4 +2,4 @@ pytest
 pandas
 scikit-learn
 numpy>=1.21.0
-joblib
+joblib==1.1.0
