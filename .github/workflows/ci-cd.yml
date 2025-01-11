@@ -24,7 +24,7 @@ jobs:
       - name: Run flake8
         run: |
           pip install flake8
-          flake8 .
+          flake8 .  # Run flake8 to check the code style
 
   test:
     runs-on: ubuntu-latest
@@ -44,10 +44,10 @@ jobs:
           python -m pytest --version  # This step ensures pytest is installed correctly
       - name: List files for debugging
         run: |
-          ls -R  # List all files in the repository to check the test paths
+          ls -R  # List all files in the repository to check test paths and files
       - name: Run tests
         run: |
-          pytest ./tests -v  # Verbose output to ensure tests are being discovered
+          pytest ./tests -v  # Verbose output to ensure tests are discovered and executed
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,8 +62,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Train and Save Model
+        run: |
+          python simple_model.py  # This runs the simple_model.py file to train the model
       - name: Deploy Model
         run: |
           echo "Deploying model to production..."
-          # Add your deployment scripts here (e.g., deploying to a server or cloud)
-
+          # Deploy the trained model here
+          # Example: Upload the model to a cloud provider or server
+          # You can use APIs like AWS S3, Google Cloud Storage, or Azure Blob Storage to upload your model file
+          # Example deployment for AWS S3 (ensure you have AWS credentials set up)
+          # aws s3 cp model.pkl s3://your-bucket-name/model.pkl
