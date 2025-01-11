@@ -39,6 +39,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Check if pytest is installed
+        run: |
+          python -m pytest --version  # This step ensures pytest is installed correctly
       - name: Run tests
         run: |
           pytest
