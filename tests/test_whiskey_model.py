@@ -88,7 +88,8 @@ def test_classification_report(load_model, preprocess_data):
         if whiskey_class not in ['accuracy', 'macro avg', 'weighted avg']:
             f1_score = report[whiskey_class]['f1-score']
             assert f1_score >= F1_SCORE_THRESHOLD, (
-                f"F1-score for class {whiskey_class} is below expected threshold: "
+                f"F1-score for class {whiskey_class}"
+                f"is below expected threshold: "
                 f"{f1_score:.2f}"
             )
 
