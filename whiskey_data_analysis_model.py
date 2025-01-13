@@ -64,8 +64,8 @@ print("Feature scaling completed")
 # Log hyperparameters
 n_estimators = 100
 max_depth = None
-mlflow.log_param("n_estimators", n_estimators, artifact_path=artifact_dir)
-mlflow.log_param("max_depth", max_depth, artifact_path=artifact_dir)
+mlflow.log_param("n_estimators", n_estimators)
+mlflow.log_param("max_depth", max_depth)
 
 # Train the model
 print("Training model...")
@@ -83,17 +83,17 @@ y_pred = rf_model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 f1 = f1_score(y_test, y_pred, average='weighted')
 print(f"Accuracy: {accuracy}, F1 Score: {f1}")
-mlflow.log_metric("accuracy", accuracy, artifact_path=artifact_dir)
-mlflow.log_metric("f1_score", f1, artifact_path=artifact_dir)
+mlflow.log_metric("accuracy", accuracy)
+mlflow.log_metric("f1_score", f1)
 
 # Log confusion matrix elements (optional)
 conf_matrix = confusion_matrix(y_test, y_pred)
 tn, fp, fn, tp = conf_matrix.ravel()
 print(f"Confusion Matrix - TN: {tn},FP: {fp}, FN: {fn}, TP: {tp}")
-mlflow.log_metric("True_Negative", tn, artifact_path=artifact_dir)
-mlflow.log_metric("False_Positive", fp, artifact_path=artifact_dir)
-mlflow.log_metric("False_Negative", fn, artifact_path=artifact_dir)
-mlflow.log_metric("True_Positive", tp, artifact_path=artifact_dir)
+mlflow.log_metric("True_Negative", tn)
+mlflow.log_metric("False_Positive", fp)
+mlflow.log_metric("False_Negative", fn)
+mlflow.log_metric("True_Positive", tp)
 
 # Log model
 print("Logging model...")
