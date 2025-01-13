@@ -27,20 +27,28 @@ def preprocess_data():
     whiskey_data = pd.read_csv(DATA_PATH)
 
     # Rename columns for easier access
-    whiskey_data.rename(columns= \
-        {'ï»¿acidity_level': 'acidity_level'}, inplace=True)
+    whiskey_data.rename(
+        columns={'ï»¿acidity_level': 'acidity_level'}, inplace=True
+    )
+
 
     # Apply log transformation for skewed features
-    whiskey_data['acidity_level_log'] = \
-        np.log1p(whiskey_data['acidity_level'])
-    whiskey_data['fruitiness_level_log'] = \
-        np.log1p(whiskey_data['fruitiness_level'])
-    whiskey_data['citrus_content_log'] = \
-        np.log1p(whiskey_data['citrus_content'])
+    whiskey_data[
+        'acidity_level_log'
+    ] = np.log1p(
+        whiskey_data['acidity_level']
+    )
+    whiskey_data[
+        'fruitiness_level_log'
+    ] = np.log1p(whiskey_data['fruitiness_level'])
+    whiskey_data[
+        'citrus_content_log'
+    ] = np.log1p(whiskey_data['citrus_content'])
 
     # Drop original columns after log transformation
     whiskey_data = whiskey_data.drop(
-        ['acidity_level', 'fruitiness_level', 'citrus_content'], axis=1)
+        ['acidity_level', 'fruitiness_level', 'citrus_content'], axis=1
+    )
 
     # Split into features and target
     X = whiskey_data.drop('whiskey_quality', axis=1)
@@ -67,8 +75,9 @@ def test_accuracy(load_model, preprocess_data):
     accuracy = accuracy_score(y_true, y_pred)
 
     # Assert the accuracy is above a reasonable threshold
-    assert accuracy >= ACCURACY_THRESHOLD, \
+    assert accuracy >= ACCURACY_THRESHOLD, (
         f"Accuracy is below expected threshold: {accuracy:.2f}"
+    )
 
 
 # Test the classification report for
@@ -78,15 +87,17 @@ def test_classification_report(load_model, preprocess_data):
     model = load_model
 
     y_pred = model.predict(X_scaled)
-    report = classification_report(y_true, \
-        y_pred, target_names=label_encoder.classes_, output_dict=True)
+    report = classification_report(
+        y_true,y_pred, target_names=label_encoder.classes_, output_dict=True
+    )
 
     # Assert that F1-score for each class is above a threshold
     for whiskey_class in report:
         if whiskey_class not in ['accuracy', 'macro avg', 'weighted avg']:
             f1_score = report[whiskey_class]['f1-score']
-            assert f1_score >= F1_SCORE_THRESHOLD, \
+            assert f1_score >= F1_SCORE_THRESHOLD, (
                 f"F1-score for class {whiskey_class} is below expected threshold: {f1_score:.2f}"
+            )
 
 
 # Test the confusion matrix
@@ -100,5 +111,6 @@ def test_confusion_matrix(load_model, preprocess_data):
     # Assert that there are no zero values
     # in the diagonal (meaning no class was missed completely)
     diagonal_values = np.diag(conf_matrix)
-    assert all(diagonal_values > 0), \
+    assert all(diagonal_values > 0), (
         f"Confusion matrix has zero values on the diagonal: {diagonal_values}"
+    )
