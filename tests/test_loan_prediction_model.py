@@ -145,16 +145,15 @@ def model(load_data):
     categorical_columns = data.select_dtypes(include=['object']).columns
     for col in categorical_columns:
         data[col] = le.fit_transform(data[col])
-    
     X = data.drop(['id', 'target'], axis=1, errors='ignore')
     y = data['target'] if 'target' in data.columns else None
-    
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-    
     scaler = StandardScaler()
-    numerical_columns = ['total_income', 'credit_amount', 'annuity_amount', 'goods_price']
+    numerical_columns = [
+        'total_income', 'credit_amount', 'annuity_amount', 'goods_price'
+    ]
     X_train[numerical_columns] = scaler.fit_transform(
         X_train[numerical_columns]
     )
@@ -162,12 +161,14 @@ def model(load_data):
         X_test[numerical_columns]
     )
     
-    rf = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf = RandomForestClassifier(
+        n_estimators=100, random_state=42
+    )
     smote = SMOTE(sampling_strategy='auto', random_state=42)
-    X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
-    
+    X_resampled, y_resampled = smote.fit_resample(
+        X_train, y_train
+    )
     rf.fit(X_resampled, y_resampled)
-    
     return rf, X_test, y_test
 
 
@@ -180,4 +181,6 @@ def test_model_accuracy(model):
 def test_model_save(model):
     rf, _, _ = model
     joblib.dump(rf, 'loan_prediction_model.pkl')
-    assert joblib.load('loan_prediction_model.pkl') is not None, "Model was not saved correctly."
+    assert joblib.load(
+        'loan_prediction_model.pkl'
+    ) is not None, "Model was not saved correctly."
