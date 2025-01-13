@@ -27,7 +27,7 @@ def preprocess_data():
     whiskey_data = pd.read_csv(DATA_PATH)
 
     # Rename columns for easier access
-    whiskey_data.rename(columns=
+    whiskey_data.rename(columns= \
         {'ï»¿acidity_level': 'acidity_level'}, inplace=True)
 
     # Apply log transformation for skewed features
@@ -46,7 +46,7 @@ def preprocess_data():
     X = whiskey_data.drop('whiskey_quality', axis=1)
     y = whiskey_data['whiskey_quality']
 
-    # Apply Label Encoding to 'whiskey_quality' 
+    # Apply Label Encoding to 'whiskey_quality'
     # to convert categorical labels to numerical labels
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(y)
@@ -71,21 +71,22 @@ def test_accuracy(load_model, preprocess_data):
         f"Accuracy is below expected threshold: {accuracy:.2f}"
 
 
-# Test the classification report for 
+# Test the classification report for
 # specific performance metrics
 def test_classification_report(load_model, preprocess_data):
     X_scaled, y_true, label_encoder = preprocess_data
     model = load_model
 
     y_pred = model.predict(X_scaled)
-    report = classification_report(y_true, 
+    report = classification_report(y_true, \
         y_pred, target_names=label_encoder.classes_, output_dict=True)
 
     # Assert that F1-score for each class is above a threshold
     for whiskey_class in report:
         if whiskey_class not in ['accuracy', 'macro avg', 'weighted avg']:
             f1_score = report[whiskey_class]['f1-score']
-            assert f1_score >= F1_SCORE_THRESHOLD, f"F1-score for class {whiskey_class} is below expected threshold: {f1_score:.2f}"
+            assert f1_score >= F1_SCORE_THRESHOLD, \
+                f"F1-score for class {whiskey_class} is below expected threshold: {f1_score:.2f}"
 
 
 # Test the confusion matrix
@@ -95,8 +96,8 @@ def test_confusion_matrix(load_model, preprocess_data):
 
     y_pred = model.predict(X_scaled)
     conf_matrix = confusion_matrix(y_true, y_pred)
-
-    # Assert that there are no zero values 
+   
+    # Assert that there are no zero values
     # in the diagonal (meaning no class was missed completely)
     diagonal_values = np.diag(conf_matrix)
     assert all(diagonal_values > 0), \
