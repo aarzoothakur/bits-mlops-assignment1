@@ -18,17 +18,22 @@ print("Experiment started...")
 whiskey_data = pd.read_csv('whiskey_data.csv')
 print("Data loaded successfully")
 
-whiskey_data.rename(columns={'ï»¿acidity_level': 'acidity_level'}, inplace=True)
+whiskey_data.rename(columns=
+    {'ï»¿acidity_level': 'acidity_level'}, inplace=True)
 whiskey_data['acidity_level_log'] = np.log1p(whiskey_data['acidity_level'])
-whiskey_data['fruitiness_level_log'] = np.log1p(whiskey_data['fruitiness_level'])
-whiskey_data['citrus_content_log'] = np.log1p(whiskey_data['citrus_content'])
-whiskey_data = whiskey_data.drop(['acidity_level', 'fruitiness_level', 'citrus_content'], axis=1)
+whiskey_data['fruitiness_level_log'] = \
+    np.log1p(whiskey_data['fruitiness_level'])
+whiskey_data['citrus_content_log'] = \
+    np.log1p(whiskey_data['citrus_content'])
+whiskey_data = whiskey_data.drop(['acidity_level',
+    'fruitiness_level', 'citrus_content'], axis=1)
 
 # Encoding the target variable
 print("Encoding target variable...")
 if whiskey_data['whiskey_quality'].dtype == 'object':
     le = LabelEncoder()
-    whiskey_data['whiskey_quality'] = le.fit_transform(whiskey_data['whiskey_quality'])
+    whiskey_data['whiskey_quality'] = \
+        le.fit_transform(whiskey_data['whiskey_quality'])
 print("Target variable encoded successfully")
 
 # Features and target
@@ -37,7 +42,8 @@ y = whiskey_data['whiskey_quality']
 
 # Train-test split
 print("Splitting data...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = \
+    train_test_split(X, y, test_size=0.2, random_state=42)
 print("Data split successfully")
 
 # Feature scaling
@@ -55,7 +61,8 @@ mlflow.log_param("max_depth", max_depth)
 
 # Train the model
 print("Training model...")
-rf_model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=42)
+rf_model = RandomForestClassifier(
+    n_estimators=n_estimators, max_depth=max_depth, random_state=42)
 rf_model.fit(X_train, y_train)
 print("Model training completed")
 
@@ -73,7 +80,8 @@ mlflow.log_metric("f1_score", f1)
 # Log confusion matrix elements (optional)
 conf_matrix = confusion_matrix(y_test, y_pred)
 tn, fp, fn, tp = conf_matrix.ravel()
-print(f"Confusion Matrix - TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
+print(f"Confusion Matrix - TN: {tn},
+    FP: {fp}, FN: {fn}, TP: {tp}")
 mlflow.log_metric("True_Negative", tn)
 mlflow.log_metric("False_Positive", fp)
 mlflow.log_metric("False_Negative", fn)
