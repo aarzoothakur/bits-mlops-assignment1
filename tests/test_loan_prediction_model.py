@@ -160,7 +160,6 @@ def model(load_data):
     X_test[numerical_columns] = scaler.transform(
         X_test[numerical_columns]
     )
-    
     rf = RandomForestClassifier(
         n_estimators=100, random_state=42
     )
