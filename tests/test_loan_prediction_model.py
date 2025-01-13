@@ -8,6 +8,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 
+
 @pytest.fixture
 def load_data():
     # Load the CSV data
@@ -135,6 +136,7 @@ def load_data():
     }, inplace=True)
     return data
 
+
 @pytest.fixture
 def model(load_data):
     # Prepare data and train model
@@ -147,12 +149,18 @@ def model(load_data):
     X = data.drop(['id', 'target'], axis=1, errors='ignore')
     y = data['target'] if 'target' in data.columns else None
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
     
     scaler = StandardScaler()
     numerical_columns = ['total_income', 'credit_amount', 'annuity_amount', 'goods_price']
-    X_train[numerical_columns] = scaler.fit_transform(X_train[numerical_columns])
-    X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
+    X_train[numerical_columns] = scaler.fit_transform(
+        X_train[numerical_columns]
+    )
+    X_test[numerical_columns] = scaler.transform(
+        X_test[numerical_columns]
+    )
     
     rf = RandomForestClassifier(n_estimators=100, random_state=42)
     smote = SMOTE(sampling_strategy='auto', random_state=42)
@@ -162,10 +170,12 @@ def model(load_data):
     
     return rf, X_test, y_test
 
+
 def test_model_accuracy(model):
     rf, X_test, y_test = model
     y_pred = rf.predict(X_test)
     assert accuracy_score(y_test, y_pred) > 0.45, "Model accuracy is too low!"
+
 
 def test_model_save(model):
     rf, _, _ = model

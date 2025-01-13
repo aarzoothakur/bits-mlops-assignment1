@@ -171,7 +171,7 @@ if 'children_count' in data.columns:
 X = data.drop(
     ['id', 'target'], axis=1, errors='ignore'
 )  # Drop ID and target variable
-y = data['target'] if 'target' in data.columns else None  
+y = data['target'] if 'target' in data.columns else None
 
 # Step 7: Split the data into training and testing sets
 if y is not None:
@@ -186,7 +186,9 @@ numerical_columns = [
 scaler = StandardScaler()
 
 if any(col in X.columns for col in numerical_columns):
-    X_train[numerical_columns] = scaler.fit_transform(X_train[numerical_columns])
+    X_train[numerical_columns] = scaler.fit_transform(
+        X_train[numerical_columns]
+    )
     X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
 
 # Step 9: Apply the model
