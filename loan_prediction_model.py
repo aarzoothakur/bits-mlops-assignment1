@@ -141,7 +141,7 @@ print("Column Names:\n", data.columns)
 print(data.info())
 print(data.isnull().sum())  # Check for missing values
 
-# Step 4: Handle missing values 
+# Step 4: Handle missing values
 # (fill missing numerical with mean, categorical with mode)
 for col in data.columns:
     if data[col].dtype == 'object':
@@ -162,18 +162,27 @@ for col in categorical_columns:
 
 # Handle 'children_count' column (it might have non-numeric categories)
 if 'children_count' in data.columns:
-    data['children_count'] = data['children_count'].replace('3+', 3).astype(int)
+    data['children_count'] = data[
+        'children_count'
+    ].replace('3+', 3).astype(int)
+
 
 # Step 6: Feature selection
-X = data.drop(['id', 'target'], axis=1, errors='ignore')  # Drop ID and target variable
-y = data['target'] if 'target' in data.columns else None  # This is what we want to predict (0: Not Approved, 1: Approved)
+X = data.drop(
+    ['id', 'target'], axis=1, errors='ignore'
+)  # Drop ID and target variable
+y = data['target'] if 'target' in data.columns else None  
 
 # Step 7: Split the data into training and testing sets
 if y is not None:
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
 # Step 8: Standardize the numerical features
-numerical_columns = ['total_income', 'credit_amount', 'annuity_amount', 'goods_price']
+numerical_columns = [
+    'total_income', 'credit_amount', 'annuity_amount', 'goods_price'
+]
 scaler = StandardScaler()
 
 if any(col in X.columns for col in numerical_columns):
