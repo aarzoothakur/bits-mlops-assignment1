@@ -12,7 +12,8 @@ import os
 
 # Start MLflow experiment
 mlflow.start_run()
-# Set a relative path to store the model artifacts (inside the working directory)
+# Set a relative path to store the model
+# artifacts (inside the working directory)
 artifact_dir = os.path.join(os.getcwd(), "mlruns")
 
 print("Experiment started...")
