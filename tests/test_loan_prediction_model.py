@@ -141,6 +141,7 @@ def load_data():
 def model(load_data):
     # Prepare data and train model
     data = load_data
+    data.dropna(inplace=True)
     le = LabelEncoder()
     categorical_columns = data.select_dtypes(include=['object']).columns
     for col in categorical_columns:

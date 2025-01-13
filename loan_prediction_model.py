@@ -143,11 +143,14 @@ print(data.isnull().sum())  # Check for missing values
 
 # Step 4: Handle missing values
 # (fill missing numerical with mean, categorical with mode)
+data.dropna(inplace=True)
+
 for col in data.columns:
     if data[col].dtype == 'object':
-        data[col].fillna(data[col].mode()[0])
+        data[col].fillna(data[col].mode()[0])  # Mode for categorical data
     else:
-        data[col].fillna(data[col].mean())
+        data[col].fillna(data[col].mean())  # Mean for numerical data
+
 
 # Step 5: Preprocessing (encoding categorical features)
 le = LabelEncoder()
