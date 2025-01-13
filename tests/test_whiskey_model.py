@@ -80,7 +80,7 @@ def test_classification_report(load_model, preprocess_data):
 
     y_pred = model.predict(X_scaled)
     report = classification_report(
-        y_true,y_pred, target_names=label_encoder.classes_, output_dict=True
+        y_true, y_pred, target_names=label_encoder.classes_, output_dict=True
     )
 
     # Assert that F1-score for each class is above a threshold
@@ -88,7 +88,8 @@ def test_classification_report(load_model, preprocess_data):
         if whiskey_class not in ['accuracy', 'macro avg', 'weighted avg']:
             f1_score = report[whiskey_class]['f1-score']
             assert f1_score >= F1_SCORE_THRESHOLD, (
-                f"F1-score for class {whiskey_class} is below expected threshold: {f1_score:.2f}"
+                f"F1-score for class {whiskey_class} is below expected threshold: "
+                f"{f1_score:.2f}"
             )
 
 
@@ -96,10 +97,8 @@ def test_classification_report(load_model, preprocess_data):
 def test_confusion_matrix(load_model, preprocess_data):
     X_scaled, y_true, _ = preprocess_data
     model = load_model
-
     y_pred = model.predict(X_scaled)
     conf_matrix = confusion_matrix(y_true, y_pred)
-   
     # Assert that there are no zero values
     # in the diagonal (meaning no class was missed completely)
     diagonal_values = np.diag(conf_matrix)

@@ -22,10 +22,8 @@ whiskey_data.rename(
     columns={'ï»¿acidity_level': 'acidity_level'}, inplace=True
 )
 whiskey_data['acidity_level_log'] = np.log1p(whiskey_data['acidity_level'])
-whiskey_data['fruitiness_level_log'
-] = np.log1p(whiskey_data['fruitiness_level'])
-whiskey_data['citrus_content_log'
-] = np.log1p(whiskey_data['citrus_content'])
+whiskey_data['fruitiness_level_log'] = np.log1p(whiskey_data['fruitiness_level'])
+whiskey_data['citrus_content_log'] = np.log1p(whiskey_data['citrus_content'])
 whiskey_data = whiskey_data.drop(['acidity_level', 'fruitiness_level', 'citrus_content'], axis=1)
 
 # Encoding the target variable
