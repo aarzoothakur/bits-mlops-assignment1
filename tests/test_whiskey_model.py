@@ -25,13 +25,10 @@ def load_model():
 @pytest.fixture(scope="module")
 def preprocess_data():
     whiskey_data = pd.read_csv(DATA_PATH)
-
     # Rename columns for easier access
     whiskey_data.rename(
         columns={'ï»¿acidity_level': 'acidity_level'}, inplace=True
     )
-
-
     # Apply log transformation for skewed features
     whiskey_data[
         'acidity_level_log'
@@ -44,25 +41,20 @@ def preprocess_data():
     whiskey_data[
         'citrus_content_log'
     ] = np.log1p(whiskey_data['citrus_content'])
-
     # Drop original columns after log transformation
     whiskey_data = whiskey_data.drop(
         ['acidity_level', 'fruitiness_level', 'citrus_content'], axis=1
     )
-
     # Split into features and target
     X = whiskey_data.drop('whiskey_quality', axis=1)
     y = whiskey_data['whiskey_quality']
-
     # Apply Label Encoding to 'whiskey_quality'
     # to convert categorical labels to numerical labels
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(y)
-
     # Apply scaling (same scaler used during training)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-
     return X_scaled, y_encoded, label_encoder
 
 
