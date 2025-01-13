@@ -72,7 +72,7 @@ jobs:
           pip install --force-reinstall numpy  # Reinstall numpy
       - name: Train and Save Model
         run: |
-          python simple_model.py  # This runs the simple_model.py file to train the model
+          python whiskey_data_analysis_model.py  # This runs the whiskey_data_analysis_model.py file to train the model
       - name: Deploy Model
         run: |
           echo "Deploying model to production..."
