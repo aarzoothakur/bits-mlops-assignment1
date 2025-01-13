@@ -2,8 +2,10 @@ import pandas as pd
 import numpy as np
 import joblib
 import pytest
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics \
+    import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing \
+    import StandardScaler, LabelEncoder
 
 # Constants
 MODEL_PATH = 'whiskey_model.pkl'
@@ -11,11 +13,13 @@ DATA_PATH = './whiskey_data.csv'
 ACCURACY_THRESHOLD = 0.35
 F1_SCORE_THRESHOLD = 0.35
 
+
 # Load the saved model
 @pytest.fixture(scope="module")
 def load_model():
     model = joblib.load(MODEL_PATH)
     return model
+
 
 # Load and preprocess the test data
 @pytest.fixture(scope="module")
@@ -23,7 +27,9 @@ def preprocess_data():
     whiskey_data = pd.read_csv(DATA_PATH)
 
     # Rename columns for easier access
-    whiskey_data.rename(columns={'ï»¿acidity_level': 'acidity_level'}, inplace=True)
+    whiskey_data.rename(columns=
+        {'ï»¿acidity_level': 'acidity_level'}, 
+        inplace=True)
 
     # Apply log transformation for skewed features
     whiskey_data['acidity_level_log'] = np.log1p(whiskey_data['acidity_level'])
