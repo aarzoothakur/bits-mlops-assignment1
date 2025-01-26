@@ -70,8 +70,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install --force-reinstall numpy  # Reinstall numpy
-      - name: Pull data from DVC remote
-        run: dvc pull
       - name: Train and Save Model
         run: |
           python loan_prediction_model.py  # This runs the loan_prediction_model.py file to train the model
