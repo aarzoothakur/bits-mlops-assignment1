@@ -5,7 +5,7 @@ import pytest
 # Load the model from joblib
 @pytest.fixture
 def model():
-    model = joblib.load('loan_prediction_model.joblib')
+    model = joblib.load('loan_prediction_tuned_model.joblib')
     return model
 
 

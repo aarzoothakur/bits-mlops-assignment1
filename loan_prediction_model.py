@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 import joblib
 from sklearn.model_selection import GridSearchCV
+import mlflow
 
 # Step 1: Load the CSV data
 data = pd.read_csv('./data/loan_approval_dataset.csv')
@@ -135,6 +136,11 @@ log_reg = LogisticRegression()
 # Initialize GridSearchCV with 5-fold cross-validation
 grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid,
                            cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
+with mlflow.start_run():
+    # Log parameters for the experiment
+    mlflow.log_param("C_values", param_grid['C'])
+    mlflow.log_param("solvers", param_grid['solver'])
+    mlflow.log_param("max_iter_values", param_grid['max_iter'])
 
 # Fit the grid search to the training data
 grid_search.fit(x_train, y_train)
@@ -145,6 +151,8 @@ best_score = grid_search.best_score_
 
 print(f'Best Hyperparameters: {best_params}')
 print(f'Best Cross-Validation Accuracy: {best_score}')
+# Log the best score as a metric
+mlflow.log_metric("best_score", best_score)
 
 # Use the best model found by grid search
 best_model = grid_search.best_estimator_
@@ -159,6 +167,7 @@ print(f'Accuracy on test dataset: {accuracy}')
 # Confusion matrix and classification report
 print(metrics.confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
+mlflow.sklearn.log_model(best_model, "logistic_regression_model")
 
 # Saving the tuned model to joblib file
 joblib.dump(best_model, 'loan_prediction_tuned_model.joblib')
