@@ -171,5 +171,5 @@ cython_debug/
 .pypirc
 
 dvc-remote
-mlruns
+# mlruns
 # data/loan_approval_dataset.csv
