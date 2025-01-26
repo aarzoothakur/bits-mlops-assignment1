@@ -12,12 +12,11 @@ model = joblib.load('loan_prediction_tuned_model.joblib')
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json(force=True)
-    # Prepare the input data for prediction
-    features = np.array([data['features']])
+    input_data = np.array(data['input']).reshape(1, -1)
     # Predict the loan approval status
-    prediction = model.predict(features)
-    # Return the result as a JSON response
-    return jsonify({'prediction': prediction[0]})
+    prediction = model.predict(input_data)
+    # Return the prediction as a JSON response
+    return jsonify({'prediction': prediction.tolist()})
 
 if __name__ == '__main__':
     app.run(debug=True)
