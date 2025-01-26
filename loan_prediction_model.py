@@ -1,3 +1,5 @@
+import mlflow
+import mlflow.sklearn
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -11,7 +13,7 @@ from imblearn.over_sampling import SMOTE
 import joblib
 
 # Step 1: Load the CSV data
-data = pd.read_csv('./loan_data.csv')
+data = pd.read_csv('./data/loan_data.csv')
 
 # Step 2: Rename columns (bulk renaming)
 data.rename(columns={
@@ -201,13 +203,28 @@ X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
 # Train the model on the resampled data
 rf.fit(X_resampled, y_resampled)
 
-# Step 10: Make predictions
-y_pred = rf.predict(X_test)
+# Start an MLflow run
+with mlflow.start_run():
+    # Log parameters and metrics
+    mlflow.log_param("model", "Random Forest Classifier")
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_param("random_state", 42)
+    mlflow.log_param("sampling_strategy", 'auto')
+    
+    # Log metrics
+    accuracy = accuracy_score(y_test, rf.predict(X_test))
+    mlflow.log_metric("accuracy", accuracy)
+    
+    # Log the model
+    mlflow.sklearn.log_model(rf, "loan_prediction_model")
+    
+    # Step 10: Make predictions
+    y_pred = rf.predict(X_test)
 
-# Step 11: Evaluate the model
-print("Accuracy: ", accuracy_score(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
+    # Step 11: Evaluate the model
+    print("Accuracy: ", accuracy_score(y_test, y_pred))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    print("Classification Report:\n", classification_report(y_test, y_pred))
 
-# Save model locally
-joblib.dump(rf, 'loan_prediction_model.pkl')
+    # Save model locally (optional)
+    joblib.dump(rf, 'loan_prediction_model.pkl')
