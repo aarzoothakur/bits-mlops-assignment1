@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.12'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -24,7 +24,7 @@ jobs:
       - name: Run flake8
         run: |
           pip install flake8
-          flake8 .
+          flake8 .  # Run flake8 to check the code style
 
   test:
     runs-on: ubuntu-latest
@@ -34,20 +34,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.12'
+      - name: Clear pip cache
+        run: |
+          pip cache purge  # Clear pip cache to avoid any caching issues
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install --force-reinstall numpy  # Reinstall numpy
       - name: Check if pytest is installed
         run: |
           python -m pytest --version  # This step ensures pytest is installed correctly
       - name: List files for debugging
         run: |
-          ls -R  # List all files in the repository to check the test paths
+          ls -R  # List all files in the repository to check test paths and files
       - name: Run tests
         run: |
-          pytest ./tests -v  # Verbose output to ensure tests are being discovered
+          pytest ./tests -v  # Verbose output to ensure tests are discovered and executed
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,13 +61,22 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.12'
+      - name: Clear pip cache
+        run: |
+          pip cache purge  # Clear pip cache to avoid any caching issues
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install --force-reinstall numpy  # Reinstall numpy
+      - name: Train and Save Model
+        run: |
+          python loan_prediction_model.py  # This runs the loan_prediction_model.py file to train the model
       - name: Deploy Model
         run: |
           echo "Deploying model to production..."
-          # Add your deployment scripts here (e.g., deploying to a server or cloud)
-
+          # Deploy the trained model here
+          # Example: Upload the model to a cloud provider or server
+          # Example deployment for AWS S3 (ensure you have AWS credentials set up)
+          # aws s3 cp model.pkl s3://your-bucket-name/model.pkl

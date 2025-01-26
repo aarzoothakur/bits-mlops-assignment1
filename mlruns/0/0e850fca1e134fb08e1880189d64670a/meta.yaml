@@ -1,0 +1,15 @@
+artifact_uri: file:///F:/Aarzoo/Mtech%20AI/Recordings/sem3/MLOPS/Assignment%201/bits-mlops-assignment1/mlruns/0/0e850fca1e134fb08e1880189d64670a/artifacts
+end_time: 1736629353306
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0e850fca1e134fb08e1880189d64670a
+run_name: bald-shark-984
+run_uuid: 0e850fca1e134fb08e1880189d64670a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1736629161500
+status: 3
+tags: []
+user_id: Sohan

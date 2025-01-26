@@ -1,1 +1,7 @@
 pytest
+pandas
+scikit-learn
+numpy
+joblib
+mlflow
+imblearn

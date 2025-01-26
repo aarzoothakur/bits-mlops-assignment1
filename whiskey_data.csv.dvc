@@ -1,0 +1,5 @@
+outs:
+- md5: 8eec37accfab82892b372632386220af
+  size: 64011
+  hash: md5
+  path: whiskey_data.csv
