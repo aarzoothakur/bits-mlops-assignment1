@@ -36,7 +36,7 @@ data.describe()
 data.isnull().sum().sort_values(ascending=False)
 
 # Handling missing values
-# Fill missing Credit_History with the most common 
+# Fill missing Credit_History with the most common
 # value (since it's likely categorical)
 data['Credit_History'] = data['Credit_History'].fillna(1.0)
 
