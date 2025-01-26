@@ -6,3 +6,4 @@ joblib
 mlflow
 imblearn
 seaborn
+dvc
