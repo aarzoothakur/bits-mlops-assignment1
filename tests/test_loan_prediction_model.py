@@ -12,7 +12,7 @@ from sklearn.preprocessing import LabelEncoder
 @pytest.fixture
 def load_data():
     # Load the CSV data
-    data = pd.read_csv('./loan_data.csv')
+    data = pd.read_csv('./data/loan_data.csv')
     # Rename columns (bulk renaming)
     data.rename(columns={
         'SK_ID_CURR': 'id',

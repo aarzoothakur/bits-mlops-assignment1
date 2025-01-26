@@ -11,7 +11,7 @@ from imblearn.over_sampling import SMOTE
 import joblib
 
 # Step 1: Load the CSV data
-data = pd.read_csv('./loan_data.csv')
+data = pd.read_csv('./data/loan_data.csv')
 
 # Step 2: Rename columns (bulk renaming)
 data.rename(columns={
