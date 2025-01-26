@@ -53,6 +53,7 @@ data.isnull().sum().sort_values(ascending=False)
 
 # Drop any remaining rows with missing values
 data.dropna(inplace=True)
+
 # Print the unique values in the object variables
 print('Married: ' + str(data['Married'].unique()))
 print('Dependents: ' + str(data['Dependents'].unique()))
@@ -63,7 +64,8 @@ print('Property_Area: ' + str(data['Property_Area'].unique()))
 data.describe()
 
 """# Handling the outliers from the dataset"""
-# Creating a new variable called total income by adding applicant income + coapplicant income
+# Creating a new variable called total income by adding applicant income +
+# coapplicant income
 data['TotalIncome'] = data['ApplicantIncome'] + data['CoapplicantIncome']
 
 # Drop Loan_ID column
@@ -98,7 +100,8 @@ featureScores.columns = ['Name of the column', 'Score']
 print(featureScores.nlargest(10, 'Score'))
 
 # Select important features
-X = X[['Married', 'Credit_History', 'TotalIncome', 'CoapplicantIncome', 'LoanAmount', 'ApplicantIncome']]
+X = X[['Married', 'Credit_History', 'TotalIncome', 'CoapplicantIncome', 
+       'LoanAmount', 'ApplicantIncome']]
 
 X.head()
 
@@ -112,7 +115,8 @@ X, y = sm.fit_resample(X, y)
 y.value_counts()
 
 # Splitting the test data
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=6)
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3, 
+                                                    random_state=6)
 
 x_train.shape, x_test.shape
 

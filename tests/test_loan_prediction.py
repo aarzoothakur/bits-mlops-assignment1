@@ -7,6 +7,7 @@ def model():
     model = joblib.load('loan_prediction_model.joblib')
     return model
 
+
 # Test prediction for a given input
 def test_prediction(model):
     input_data = [[1, 1.0, 459.0, 0.0, 25.0, 3459]]  
