@@ -1,213 +1,173 @@
+import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (
-    accuracy_score,
-    confusion_matrix,
-    classification_report
-)
+from sklearn import preprocessing
+from sklearn.feature_selection import SelectKBest, chi2
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
 from imblearn.over_sampling import SMOTE
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.model_selection import train_test_split
 import joblib
+from sklearn.model_selection import GridSearchCV
+import mlflow
 
 # Step 1: Load the CSV data
-data = pd.read_csv('./loan_data.csv')
+data = pd.read_csv('./data/loan_approval_dataset.csv')
+data.head()
 
-# Step 2: Rename columns (bulk renaming)
-data.rename(columns={
-    'SK_ID_CURR': 'id',
-    'TARGET': 'target',
-    'NAME_CONTRACT_TYPE': 'contract_type',
-    'CODE_GENDER': 'gender',
-    'FLAG_OWN_CAR': 'own_car',
-    'FLAG_OWN_REALTY': 'own_realty',
-    'CNT_CHILDREN': 'children_count',
-    'AMT_INCOME_TOTAL': 'total_income',
-    'AMT_CREDIT': 'credit_amount',
-    'AMT_ANNUITY': 'annuity_amount',
-    'AMT_GOODS_PRICE': 'goods_price',
-    'NAME_TYPE_SUITE': 'suite_type',
-    'NAME_INCOME_TYPE': 'income_type',
-    'NAME_EDUCATION_TYPE': 'education_type',
-    'NAME_FAMILY_STATUS': 'family_status',
-    'NAME_HOUSING_TYPE': 'housing_type',
-    'REGION_POPULATION_RELATIVE': 'population_relative',
-    'DAYS_BIRTH': 'days_birth',
-    'DAYS_EMPLOYED': 'days_employed',
-    'DAYS_REGISTRATION': 'days_registration',
-    'DAYS_ID_PUBLISH': 'days_id_publish',
-    'OWN_CAR_AGE': 'car_age',
-    'FLAG_MOBIL': 'has_mobile',
-    'FLAG_EMP_PHONE': 'has_emp_phone',
-    'FLAG_WORK_PHONE': 'has_work_phone',
-    'FLAG_CONT_MOBILE': 'mobile_contactable',
-    'FLAG_PHONE': 'has_phone',
-    'FLAG_EMAIL': 'has_email',
-    'OCCUPATION_TYPE': 'occupation_type',
-    'CNT_FAM_MEMBERS': 'family_members_count',
-    'REG_REGION_NOT_LIVE_REGION': 'region_mismatch_live',
-    'REG_REGION_NOT_WORK_REGION': 'region_mismatch_work',
-    'LIVE_REGION_NOT_WORK_REGION': 'live_work_region_mismatch',
-    'REG_CITY_NOT_LIVE_CITY': 'city_mismatch_live',
-    'REG_CITY_NOT_WORK_CITY': 'city_mismatch_work',
-    'LIVE_CITY_NOT_WORK_CITY': 'live_work_city_mismatch',
-    'ORGANIZATION_TYPE': 'organization_type',
-    'EXT_SOURCE_1': 'ext_source_1',
-    'EXT_SOURCE_2': 'ext_source_2',
-    'EXT_SOURCE_3': 'ext_source_3',
-    'APARTMENTS_AVG': 'avg_apartments',
-    'BASEMENTAREA_AVG': 'avg_basement_area',
-    'YEARS_BEGINEXPLUATATION_AVG': 'avg_years_begin_expl',
-    'YEARS_BUILD_AVG': 'avg_years_build',
-    'COMMONAREA_AVG': 'avg_common_area',
-    'ELEVATORS_AVG': 'avg_elevators',
-    'ENTRANCES_AVG': 'avg_entrances',
-    'FLOORSMAX_AVG': 'avg_max_floors',
-    'FLOORSMIN_AVG': 'avg_min_floors',
-    'LANDAREA_AVG': 'avg_land_area',
-    'LIVINGAPARTMENTS_AVG': 'avg_living_apartments',
-    'LIVINGAREA_AVG': 'avg_living_area',
-    'NONLIVINGAPARTMENTS_AVG': 'avg_nonliving_apartments',
-    'NONLIVINGAREA_AVG': 'avg_nonliving_area',
-    'APARTMENTS_MODE': 'mode_apartments',
-    'BASEMENTAREA_MODE': 'mode_basement_area',
-    'YEARS_BEGINEXPLUATATION_MODE': 'mode_years_begin_expl',
-    'YEARS_BUILD_MODE': 'mode_years_build',
-    'COMMONAREA_MODE': 'mode_common_area',
-    'ELEVATORS_MODE': 'mode_elevators',
-    'ENTRANCES_MODE': 'mode_entrances',
-    'FLOORSMAX_MODE': 'mode_max_floors',
-    'FLOORSMIN_MODE': 'mode_min_floors',
-    'LANDAREA_MODE': 'mode_land_area',
-    'LIVINGAPARTMENTS_MODE': 'mode_living_apartments',
-    'LIVINGAREA_MODE': 'mode_living_area',
-    'NONLIVINGAPARTMENTS_MODE': 'mode_nonliving_apartments',
-    'NONLIVINGAREA_MODE': 'mode_nonliving_area',
-    'APARTMENTS_MEDI': 'medi_apartments',
-    'BASEMENTAREA_MEDI': 'medi_basement_area',
-    'YEARS_BEGINEXPLUATATION_MEDI': 'medi_years_begin_expl',
-    'YEARS_BUILD_MEDI': 'medi_years_build',
-    'COMMONAREA_MEDI': 'medi_common_area',
-    'ELEVATORS_MEDI': 'medi_elevators',
-    'ENTRANCES_MEDI': 'medi_entrances',
-    'FLOORSMAX_MEDI': 'medi_max_floors',
-    'FLOORSMIN_MEDI': 'medi_min_floors',
-    'LANDAREA_MEDI': 'medi_land_area',
-    'LIVINGAPARTMENTS_MEDI': 'medi_living_apartments',
-    'LIVINGAREA_MEDI': 'medi_living_area',
-    'NONLIVINGAPARTMENTS_MEDI': 'medi_nonliving_apartments',
-    'NONLIVINGAREA_MEDI': 'medi_nonliving_area',
-    'FONDKAPREMONT_MODE': 'fondk_premont_mode',
-    'HOUSETYPE_MODE': 'house_type_mode',
-    'TOTALAREA_MODE': 'total_area_mode',
-    'WALLSMATERIAL_MODE': 'walls_material_mode',
-    'EMERGENCYSTATE_MODE': 'emergency_state_mode',
-    'OBS_30_CNT_SOCIAL_CIRCLE': 'obs_30_cnt_social_circle',
-    'DEF_30_CNT_SOCIAL_CIRCLE': 'def_30_cnt_social_circle',
-    'OBS_60_CNT_SOCIAL_CIRCLE': 'obs_60_cnt_social_circle',
-    'DEF_60_CNT_SOCIAL_CIRCLE': 'def_60_cnt_social_circle',
-    'DAYS_LAST_PHONE_CHANGE': 'days_last_phone_change',
-    'FLAG_DOCUMENT_2': 'flag_document_2',
-    'FLAG_DOCUMENT_3': 'flag_document_3',
-    'FLAG_DOCUMENT_4': 'flag_document_4',
-    'FLAG_DOCUMENT_5': 'flag_document_5',
-    'FLAG_DOCUMENT_6': 'flag_document_6',
-    'FLAG_DOCUMENT_7': 'flag_document_7',
-    'FLAG_DOCUMENT_8': 'flag_document_8',
-    'FLAG_DOCUMENT_9': 'flag_document_9',
-    'FLAG_DOCUMENT_10': 'flag_document_10',
-    'FLAG_DOCUMENT_11': 'flag_document_11',
-    'FLAG_DOCUMENT_12': 'flag_document_12',
-    'FLAG_DOCUMENT_13': 'flag_document_13',
-    'FLAG_DOCUMENT_14': 'flag_document_14',
-    'FLAG_DOCUMENT_15': 'flag_document_15',
-    'FLAG_DOCUMENT_16': 'flag_document_16',
-    'FLAG_DOCUMENT_17': 'flag_document_17',
-    'FLAG_DOCUMENT_18': 'flag_document_18',
-    'FLAG_DOCUMENT_19': 'flag_document_19',
-    'FLAG_DOCUMENT_20': 'flag_document_20',
-    'FLAG_DOCUMENT_21': 'flag_document_21',
-    'AMT_REQ_CREDIT_BUREAU_HOUR': 'amt_req_credit_bureau_hour',
-    'AMT_REQ_CREDIT_BUREAU_DAY': 'amt_req_credit_bureau_day',
-    'AMT_REQ_CREDIT_BUREAU_WEEK': 'amt_req_credit_bureau_week',
-    'AMT_REQ_CREDIT_BUREAU_MON': 'amt_req_credit_bureau_mon',
-    'AMT_REQ_CREDIT_BUREAU_QRT': 'amt_req_credit_bureau_qrt',
-    'AMT_REQ_CREDIT_BUREAU_YEAR': 'amt_req_credit_bureau_year'
-}, inplace=True)
+data.shape
+"""Will look for the data description"""
+data.info()
 
-# Step 3: Inspect the renamed columns
-print(data.head())
-print("Column Names:\n", data.columns)
-print(data.info())
-print(data.isnull().sum())  # Check for missing values
+# Print the unique values in the object variables
+print('Married: ' + str(data['Married'].unique()))
+print('Dependents: ' + str(data['Dependents'].unique()))
+print('Education: ' + str(data['Education'].unique()))
+print('Self_Employed: ' + str(data['Self_Employed'].unique()))
+print('Property_Area: ' + str(data['Property_Area'].unique()))
 
-# Step 4: Handle missing values
-# (fill missing numerical with mean, categorical with mode)
+print('Loan status', data['Loan_Status'].value_counts())
+
+"""The data set is not balanced in outputs"""
+
+data.describe()
+
+"""# Checking the missing values in the dataset"""
+
+# Will look for the missing values in the data
+data.isnull().sum().sort_values(ascending=False)
+
+# Handling missing values
+# Fill missing Credit_History with the most common
+# value (since it's likely categorical)
+data['Credit_History'] = data['Credit_History'].fillna(1.0)
+
+# Fill missing Self_Employed with the most common category (No)
+data['Self_Employed'] = data['Self_Employed'].fillna('No')
+
+# Fill missing LoanAmount with the mean of the column (since it's numerical)
+data['LoanAmount'] = data['LoanAmount'].fillna(data['LoanAmount'].mean())
+
+# Fill missing values in the 'Dependents' column with the most common value (0)
+data['Dependents'] = data['Dependents'].fillna('0')
+
+# Check if there are any remaining missing values
+data.isnull().sum().sort_values(ascending=False)
+
+# Drop any remaining rows with missing values
 data.dropna(inplace=True)
 
-for col in data.columns:
-    if data[col].dtype == 'object':
-        data[col].fillna(data[col].mode()[0])  # Mode for categorical data
-    else:
-        data[col].fillna(data[col].mean())  # Mean for numerical data
+# Print the unique values in the object variables
+print('Married: ' + str(data['Married'].unique()))
+print('Dependents: ' + str(data['Dependents'].unique()))
+print('Education: ' + str(data['Education'].unique()))
+print('Self_Employed: ' + str(data['Self_Employed'].unique()))
+print('Property_Area: ' + str(data['Property_Area'].unique()))
 
+data.describe()
 
-# Step 5: Preprocessing (encoding categorical features)
-le = LabelEncoder()
-# Automatically select categorical columns
-categorical_columns = data.select_dtypes(
-    include=['object']
-).columns
+"""# Handling the outliers from the dataset"""
+# Creating a new variable called total income by adding applicant income +
+# coapplicant income
+data['TotalIncome'] = data['ApplicantIncome'] + data['CoapplicantIncome']
 
+# Drop Loan_ID column
+data = data.drop(columns=['Loan_ID'], axis=1)
 
-for col in categorical_columns:
-    data[col] = le.fit_transform(data[col])
+# Make all other columns numerical as well
+data['Married'] = np.where((data['Married'] == 'Yes'), 1, 0)
+data['Gender'] = np.where((data['Gender'] == 'Female'), 1, 0)
+data['Education'] = np.where((data['Education'] == 'Graduate'), 1, 0)
+data['Self_Employed'] = np.where((data['Self_Employed'] == 'Yes'), 1, 0)
+data['Dependents'] = np.where((data['Dependents'] == '0'), 0, 1)
+data['Loan_Status'] = np.where((data['Loan_Status'] == 'Y'), 1, 0)
 
-# Handle 'children_count' column (it might have non-numeric categories)
-if 'children_count' in data.columns:
-    data['children_count'] = data[
-        'children_count'
-    ].replace('3+', 3).astype(int)
+# Label encoding for 'Property_Area' column
+le = preprocessing.LabelEncoder()
+data['Property_Area'] = le.fit_transform(data['Property_Area'])
 
+# Separate features and target
+y = data['Loan_Status']
+X = data.drop(columns=['Loan_Status'])
 
-# Step 6: Feature selection
-X = data.drop(
-    ['id', 'target'], axis=1, errors='ignore'
-)  # Drop ID and target variable
-y = data['target'] if 'target' in data.columns else None
+"""Selecting Important features"""
+# Apply SelectKBest class to extract top 10 best features
+bestfeatures = SelectKBest(score_func=chi2, k='all')
+fit = bestfeatures.fit(X, y)
+dfscores = pd.DataFrame(fit.scores_)
+dfcolumns = pd.DataFrame(X.columns)
 
-# Step 7: Split the data into training and testing sets
-if y is not None:
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+# Concatenate two dataframes for better visualization
+featureScores = pd.concat([dfcolumns, dfscores], axis=1)
+featureScores.columns = ['Name of the column', 'Score']
+print(featureScores.nlargest(10, 'Score'))
 
-# Step 8: Standardize the numerical features
-numerical_columns = [
-    'total_income', 'credit_amount', 'annuity_amount', 'goods_price'
-]
-scaler = StandardScaler()
+# Select important features
+X = X[['Married', 'Credit_History', 'TotalIncome', 'CoapplicantIncome',
+       'LoanAmount', 'ApplicantIncome']]
 
-if any(col in X.columns for col in numerical_columns):
-    X_train[numerical_columns] = scaler.fit_transform(
-        X_train[numerical_columns]
-    )
-    X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
+X.head()
 
-# Step 9: Apply the model
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-smote = SMOTE(sampling_strategy='auto', random_state=42)
-X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
-# Train the model on the resampled data
-rf.fit(X_resampled, y_resampled)
+X.shape, y.shape
 
-# Step 10: Make predictions
-y_pred = rf.predict(X_test)
+y.value_counts()
 
-# Step 11: Evaluate the model
-print("Accuracy: ", accuracy_score(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
+"""Dataset is not balanced, so we use SMOTE algorithm to balance the output"""
+sm = SMOTE(random_state=2)
+X, y = sm.fit_resample(X, y)
+y.value_counts()
 
-# Save model locally
-joblib.dump(rf, 'loan_prediction_model.pkl')
+# Splitting the test data
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+                                                    random_state=6)
+
+x_train.shape, x_test.shape
+
+# Define the parameter grid for hyperparameter tuning
+param_grid = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'solver': ['liblinear', 'lbfgs', 'saga'],
+    'max_iter': [500, 1000, 2000, ]
+}
+
+# Initialize Logistic Regression
+log_reg = LogisticRegression()
+
+# Initialize GridSearchCV with 5-fold cross-validation
+grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid,
+                           cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
+with mlflow.start_run():
+    # Log parameters for the experiment
+    mlflow.log_param("C_values", param_grid['C'])
+    mlflow.log_param("solvers", param_grid['solver'])
+    mlflow.log_param("max_iter_values", param_grid['max_iter'])
+
+# Fit the grid search to the training data
+grid_search.fit(x_train, y_train)
+
+# Get the best parameters and best score from the grid search
+best_params = grid_search.best_params_
+best_score = grid_search.best_score_
+
+print(f'Best Hyperparameters: {best_params}')
+print(f'Best Cross-Validation Accuracy: {best_score}')
+# Log the best score as a metric
+mlflow.log_metric("best_score", best_score)
+
+# Use the best model found by grid search
+best_model = grid_search.best_estimator_
+
+# Make predictions with the best model
+pred = best_model.predict(x_test)
+
+# Accuracy on the test dataset
+accuracy = accuracy_score(y_test, pred)
+print(f'Accuracy on test dataset: {accuracy}')
+
+# Confusion matrix and classification report
+print(metrics.confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred))
+mlflow.sklearn.log_model(best_model, "logistic_regression_model")
+
+# Saving the tuned model to joblib file
+joblib.dump(best_model, 'loan_prediction_tuned_model.joblib')
