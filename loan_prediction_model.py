@@ -8,6 +8,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 import joblib
+from sklearn.model_selection import GridSearchCV
 
 # Step 1: Load the CSV data
 data = pd.read_csv('./data/loan_approval_dataset.csv')
@@ -121,21 +122,43 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
 
 x_train.shape, x_test.shape
 
-# Fitting Logistic regression
-log = LogisticRegression(max_iter=1000)  # Increase max_iter
+# Define the parameter grid for hyperparameter tuning
+param_grid = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'solver': ['liblinear', 'lbfgs', 'saga'],
+    'max_iter': [500, 1000, 2000, ]
+}
 
-log.fit(x_train, y_train)
+# Initialize Logistic Regression
+log_reg = LogisticRegression()
 
-# Saving the model to joblib file
-joblib.dump(log, 'loan_prediction_model.joblib')
+# Initialize GridSearchCV with 5-fold cross-validation
+grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid, 
+                           cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
 
-# Make predictions with the trained model on test data
-pred = log.predict(x_test)
+# Fit the grid search to the training data
+grid_search.fit(x_train, y_train)
+
+# Get the best parameters and best score from the grid search
+best_params = grid_search.best_params_
+best_score = grid_search.best_score_
+
+print(f'Best Hyperparameters: {best_params}')
+print(f'Best Cross-Validation Accuracy: {best_score}')
+
+# Use the best model found by grid search
+best_model = grid_search.best_estimator_
+
+# Make predictions with the best model
+pred = best_model.predict(x_test)
 
 # Accuracy on the test dataset
 accuracy = accuracy_score(y_test, pred)
 print(f'Accuracy on test dataset: {accuracy}')
 
-# Printing confusion matrix and classification report
+# Confusion matrix and classification report
 print(metrics.confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
+
+# Saving the tuned model to joblib file
+joblib.dump(best_model, 'loan_prediction_tuned_model.joblib')
