@@ -36,7 +36,8 @@ data.describe()
 data.isnull().sum().sort_values(ascending=False)
 
 # Handling missing values
-# Fill missing Credit_History with the most common value (since it's likely categorical)
+# Fill missing Credit_History with the most common 
+# value (since it's likely categorical)
 data['Credit_History'] = data['Credit_History'].fillna(1.0)
 
 # Fill missing Self_Employed with the most common category (No)
@@ -100,7 +101,7 @@ featureScores.columns = ['Name of the column', 'Score']
 print(featureScores.nlargest(10, 'Score'))
 
 # Select important features
-X = X[['Married', 'Credit_History', 'TotalIncome', 'CoapplicantIncome', 
+X = X[['Married', 'Credit_History', 'TotalIncome', 'CoapplicantIncome',
        'LoanAmount', 'ApplicantIncome']]
 
 X.head()
@@ -115,7 +116,7 @@ X, y = sm.fit_resample(X, y)
 y.value_counts()
 
 # Splitting the test data
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3, 
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
                                                     random_state=6)
 
 x_train.shape, x_test.shape
