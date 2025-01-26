@@ -1,8 +1,9 @@
 artifact_uri: file:///F:/Aarzoo/Mtech%20AI/Recordings/sem3/MLOPS/Assignment%201/bits-mlops-assignment1/mlruns/0/0e850fca1e134fb08e1880189d64670a/artifacts
+deleted_time: 1737901524708
 end_time: 1736629353306
 entry_point_name: ''
 experiment_id: '0'
-lifecycle_stage: active
+lifecycle_stage: deleted
 run_id: 0e850fca1e134fb08e1880189d64670a
 run_name: bald-shark-984
 run_uuid: 0e850fca1e134fb08e1880189d64670a

@@ -1,8 +1,9 @@
 artifact_uri: file:///F:/Aarzoo/Mtech%20AI/Recordings/sem3/MLOPS/Assignment%201/bits-mlops-assignment1/mlruns/0/74d8c90656d7401faad950eb8b973bcc/artifacts
+deleted_time: 1737901524705
 end_time: 1736697074215
 entry_point_name: ''
 experiment_id: '0'
-lifecycle_stage: active
+lifecycle_stage: deleted
 run_id: 74d8c90656d7401faad950eb8b973bcc
 run_name: skittish-cow-785
 run_uuid: 74d8c90656d7401faad950eb8b973bcc

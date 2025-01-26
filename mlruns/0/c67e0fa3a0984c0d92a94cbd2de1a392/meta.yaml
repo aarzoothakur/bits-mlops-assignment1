@@ -1,8 +1,9 @@
 artifact_uri: file:///F:/Aarzoo/Mtech%20AI/Recordings/sem3/MLOPS/Assignment%201/bits-mlops-assignment1/mlruns/0/c67e0fa3a0984c0d92a94cbd2de1a392/artifacts
+deleted_time: 1737901549265
 end_time: 1737900583322
 entry_point_name: ''
 experiment_id: '0'
-lifecycle_stage: active
+lifecycle_stage: deleted
 run_id: c67e0fa3a0984c0d92a94cbd2de1a392
 run_name: rogue-gnu-949
 run_uuid: c67e0fa3a0984c0d92a94cbd2de1a392
