@@ -169,4 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-/whiskey_data.csv
+
+dvc-remote
+mlruns
+data/loan_approval_dataset.csv
