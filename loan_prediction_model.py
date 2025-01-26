@@ -133,7 +133,7 @@ param_grid = {
 log_reg = LogisticRegression()
 
 # Initialize GridSearchCV with 5-fold cross-validation
-grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid, 
+grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid,
                            cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
 
 # Fit the grid search to the training data
