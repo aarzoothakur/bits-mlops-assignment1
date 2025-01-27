@@ -1,8 +1,0 @@
-[core]
-    remote = dev-remote
-['remote "local-remote"']
-    url = ../dvc-remote
-['remote "myremote"']
-    url = gdrive://18h2iU79du-5C2IsgJNkGXOSM4rlEVCv0
-['remote "dev-remote"']
-    url = gdrive://18h2iU79du-5C2IsgJNkGXOSM4rlEVCv0
