@@ -163,7 +163,7 @@ best_model = grid_search.best_estimator_
 
 # Make predictions with the best model
 y_pred = best_model.predict(x_test)
-# Check mse 
+# Check mse
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 mlflow.log_metric("mse", mse)

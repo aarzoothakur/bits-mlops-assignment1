@@ -173,3 +173,4 @@ cython_debug/
 dvc-remote
 mlruns
 # data/loan_approval_dataset.csv
+.DS_Store
