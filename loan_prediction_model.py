@@ -5,7 +5,10 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from imblearn.over_sampling import SMOTE
-from sklearn.metrics import accuracy_score, classification_report, mean_squared_error, r2_score
+from sklearn.metrics import (
+    accuracy_score, classification_report,
+    mean_squared_error, r2_score
+    )
 from sklearn.model_selection import train_test_split
 import joblib
 from sklearn.model_selection import GridSearchCV
@@ -160,7 +163,7 @@ best_model = grid_search.best_estimator_
 
 # Make predictions with the best model
 y_pred = best_model.predict(x_test)
-# Check mse 
+# Check mse
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 mlflow.log_metric("mse", mse)
