@@ -5,7 +5,7 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from imblearn.over_sampling import SMOTE
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 import joblib
 from sklearn.model_selection import GridSearchCV
@@ -136,6 +136,7 @@ log_reg = LogisticRegression()
 # Initialize GridSearchCV with 5-fold cross-validation
 grid_search = GridSearchCV(estimator=log_reg, param_grid=param_grid,
                            cv=5, n_jobs=-1, verbose=1, scoring='accuracy')
+mlflow.set_experiment("Logistic Regression Loan Prediction")
 with mlflow.start_run():
     # Log parameters for the experiment
     mlflow.log_param("C_values", param_grid['C'])
@@ -158,15 +159,20 @@ mlflow.log_metric("best_score", best_score)
 best_model = grid_search.best_estimator_
 
 # Make predictions with the best model
-pred = best_model.predict(x_test)
+y_pred = best_model.predict(x_test)
+# Check mse 
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+mlflow.log_metric("mse", mse)
+mlflow.log_metric("r2", r2)
 
 # Accuracy on the test dataset
-accuracy = accuracy_score(y_test, pred)
+accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy on test dataset: {accuracy}')
 
 # Confusion matrix and classification report
-print(metrics.confusion_matrix(y_test, pred))
-print(classification_report(y_test, pred))
+print(metrics.confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
 mlflow.sklearn.log_model(best_model, "logistic_regression_model")
 
 # Saving the tuned model to joblib file
