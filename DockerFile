@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8-slim
+FROM python:3.12
 
 # Set the working directory in the container
 WORKDIR /app
@@ -7,14 +7,18 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install any necessary dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies in a virtual environment
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+RUN pip install --no-cache-dir --default-timeout=100 -r requirements.txt
 
+# Set environment variables for Flask
+ENV FLASK_APP=/app/app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5200 
+ 
 # Expose the port the app runs on
-EXPOSE 5000
-
-# Define the environment variable for Flask
-ENV FLASK_APP=app.py
+EXPOSE 5200
 
 # Run the application
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5200"]
